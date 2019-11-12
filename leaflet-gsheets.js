@@ -136,7 +136,11 @@ function addPoints(data) {
     marker.feature = {
       properties: {
       	Name: data[row].Name,
-        Description: data[row].Description
+        Hours: data[row].Hours
+        Phone: data[row].Phone
+        Email: data[row].Email
+        Website: data[row].Website
+        Contact Name: data[row].Contact_Name
       }
     };
     marker.on({
