@@ -136,18 +136,16 @@ function addPoints(data) {
     marker.feature = {
       properties: {
       	Name: data[row].Name,
-        Hours: data[row].Hours
+        Hours: data[row].Hours,
         Phone: data[row].Phone
-        Email: data[row].Email
-        Website: data[row].Website
-        Contact Name: data[row].Contact_Name
       }
     };
     marker.on({
       click: function(e) {
         L.DomEvent.stopPropagation(e);
         document.getElementById('sidebar-title').innerHTML = e.target.feature.properties.Name;
-        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Description;
+        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Hours;
+        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Phone;
         sidebar.open(panelID);
       }
     });
