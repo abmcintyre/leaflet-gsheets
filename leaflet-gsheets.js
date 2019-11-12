@@ -136,7 +136,6 @@ function addPoints(data) {
     marker.feature = {
       properties: {
       	Name: data[row].Name,
-        Address: data[row].Address,
         Description: data[row].Description
       }
     };
@@ -144,7 +143,6 @@ function addPoints(data) {
       click: function(e) {
         L.DomEvent.stopPropagation(e);
         document.getElementById('sidebar-title').innerHTML = e.target.feature.properties.Name;
-        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Address;
         document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Description;
         sidebar.open(panelID);
       }
@@ -154,7 +152,7 @@ function addPoints(data) {
     var icon = L.AwesomeMarkers.icon({
       icon: 'info-sign',
       iconColor: 'white',
-      markerColor: getColor(data[row].category),
+      markerColor: 'red',
       prefix: 'glyphicon',
       extraClasses: 'fa-rotate-0'
     });
