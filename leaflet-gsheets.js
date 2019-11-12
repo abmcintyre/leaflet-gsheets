@@ -1,34 +1,28 @@
-/*
- * Script to display two tables from Google Sheets as point and polygon layers using Leaflet
- * The Sheets are then imported using Tabletop.js and overwrite the initially laded layers
+/*Script to display two tables from Google Sheets as point and polygon layers using Leaflet - The Sheets are then imported using Tabletop.js and overwrite the initially laded layers
  */
 
 // init() is called as soon as the page loads
 function init() {
 
-  // PASTE YOUR URLs HERE from Google Sheets 'shareable link' form
-  // the first WILL BE the asset 1 layer and the second the asset 2 layer
-  //var polyURL = 'https://docs.google.com/spreadsheets/d/1EUFSaqi30b6oefK0YWWNDDOzwmCTTXlXkFHAc2QrUxM/edit?usp=sharing';
-  var pointsURL = 'https://docs.google.com/spreadsheets/d/1kjJVPF0LyaiaDYF8z_x23UulGciGtBALQ1a1pK0coRM/edit?usp=sharing';
+  // PASTE YOUR URLs HERE from Google Sheets 'shareable link' form - the first is the workshop 1 layer and the second the workshop 2 layer
+  //var workshop1URL = 'https://docs.google.com/spreadsheets/d/17EVLKmK7-52xxPOZUPLp1DiOfY33WOZXrSHjGlZgcqI/edit?usp=sharing';
+  var workshop2URL = 'https://docs.google.com/spreadsheets/d/1BaXZIexSQcNDk5lHwxdJJ7ta1lSncUex6eaSvHFQrhQ/edit?usp=sharing';
 
-//this is my URL for Google Sheets workbook: 'https://docs.google.com/spreadsheets/d/17EVLKmK7-52xxPOZUPLp1DiOfY33WOZXrSHjGlZgcqI/edit?usp=sharing'
-
-  //Tabletop.init( { key: polyURL,
+  //Tabletop.init( { key: workshop1URL,
     //callback: addPolygons,
     //simpleSheet: true } );
-  Tabletop.init( { key: pointsURL,
+  Tabletop.init( { key: workshop2URL,
     callback: addPoints,
     simpleSheet: true } );  // simpleSheet assumes there is only one table and automatically sends its data
 }
 window.addEventListener('DOMContentLoaded', init);
 
-// Create a new Leaflet map centered on the continental US CHANGE!
-var map = L.map('map').setView([40, -100], 4);
+// Create a new Leaflet map centered on London!
+var map = L.map('map').setView([51.5, 0.1], 9);
 
 // This is the Carto Positron basemap
-var basemap = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-  subdomains: 'abcd',
+var basemap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   maxZoom: 19
 });
 basemap.addTo(map);
@@ -36,7 +30,7 @@ basemap.addTo(map);
 var sidebar = L.control.sidebar({
   container: 'sidebar',
   closeButton: true,
-  position: 'right'
+  position: 'left'
 }).addTo(map);
 
 panelID = 'my-info-panel'
@@ -133,7 +127,7 @@ function addPoints(data) {
   pointGroupLayer = L.layerGroup().addTo(map);
 
   for(var row = 0; row < data.length; row++) {
-    var marker = L.marker([data[row].lat, data[row].long]).addTo(pointGroupLayer);
+    var marker = L.marker([data[row].Latitude, data[row].Longitude]).addTo(pointGroupLayer);
 
     // UNCOMMENT THIS LINE TO USE POPUPS
     //marker.bindPopup('<h2>' + data[row].location + '</h2>There's a ' + data[row].level + ' ' + data[row].category + ' here');
@@ -141,15 +135,17 @@ function addPoints(data) {
     // COMMENT THE NEXT 14 LINES TO DISABLE SIDEBAR FOR THE MARKERS
     marker.feature = {
       properties: {
-        location: data[row].location,
-        category: data[row].category
+      	Name: data[row].Name,
+        Address: data[row].Address,
+        Description: data[row].Description
       }
     };
     marker.on({
       click: function(e) {
         L.DomEvent.stopPropagation(e);
-        document.getElementById('sidebar-title').innerHTML = e.target.feature.properties.location;
-        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.category;
+        document.getElementById('sidebar-title').innerHTML = e.target.feature.properties.Name;
+        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Address;
+        document.getElementById('sidebar-content').innerHTML = e.target.feature.properties.Description;
         sidebar.open(panelID);
       }
     });
